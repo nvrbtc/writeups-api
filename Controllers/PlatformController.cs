@@ -38,7 +38,7 @@ namespace dotnetMVP.Controllers
 
         //TODO: [Authorize(Roles = "Admin, Moderator")] - add roles when they will be introduced
         [HttpPost("create")]
-        public async Task<IActionResult> CreateAsync([FromBody]CreatePllatformDto dto)
+        public async Task<IActionResult> CreateAsync([FromBody]CreatePlatformDto dto)
         {
             return Ok(await _platformService.CreateAsync(dto));
         }
@@ -56,9 +56,9 @@ namespace dotnetMVP.Controllers
         [HttpDelete("delete")]
         public async Task<ActionResult> DeleteAsync(Guid id)
         {
-            await _platformService.DeleteByIdAsync(id);
+            var result = await _platformService.DeleteByIdAsync(id);
 
-            return Ok();
+            return this.ResultToHttpCode(result);
         }
 
     }

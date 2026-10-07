@@ -1,6 +1,7 @@
 ﻿using dotnetMVP.Models;
 using dotnetMVP.Models.DTO.Writeup;
 using dotnetMVP.Types;
+using Nerdudes.Models.DTO;
 
 namespace dotnetMVP.Services.Interface
 {
@@ -12,8 +13,8 @@ namespace dotnetMVP.Services.Interface
         Task<ServiceResult<IEnumerable<ShowWriteUpDto>>> GetAllByUserIdAsync(Guid userId);
         Task<ServiceResult<ShowWriteUpDto>> GetByIdAsync(Guid writeupId);
         Task<ServiceResult<ShowWriteUpDto>> CreateAsync(CreateWriteUpDto dto,Guid id);
-        Task<ServiceResult<ShowWriteUpDto>> EditAsync(ShowWriteUpDto dto,Guid userId);
-        Task<ServiceResult<Guid>> DeleteAsync(Guid writeupId,Guid userId);
+        Task<ServiceResult<ShowWriteUpDto>> UpdateAsync(ShowWriteUpDto dto,Guid userId);
+        Task<ServiceResult<GeneralResponse>> DeleteAsync(Guid writeupId,Guid userId);
 
     }
 }

@@ -83,6 +83,7 @@ namespace dotnetMVP.Services.Realization
             }
             catch(SecurityTokenException ex)
             {
+                
                 _logger.LogWarning("Failed JWT refreshing: {message}", ex.Message);
                 return ServiceResult<JwtTokens>.Fail("Failed JWT refreshing", OperationResult.FailedAuth);
             }

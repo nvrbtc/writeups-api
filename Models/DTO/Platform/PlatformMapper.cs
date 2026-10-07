@@ -4,7 +4,7 @@ namespace dotnetMVP.Models.DTO.PlatformDto
 {
     public class PlatformMapper
     {
-        public Platform MapToEntity(CreatePllatformDto dto)
+        public Platform MapToEntity(CreatePlatformDto dto)
         {
             return new()
             {

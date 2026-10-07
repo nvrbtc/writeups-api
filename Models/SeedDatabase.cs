@@ -146,8 +146,9 @@ namespace dotnetMVP.Models
 
             var id = await _context.Roles.Where(x => x.Name == nameof(AppPolicies.AdminAccess)).Select(x => x.Id).FirstOrDefaultAsync();
             var res = await _context.UserRoles.Where(x=> x.RoleId == id).Select(x => x.UserId).AnyAsync();
+            var usersExists = await _context.Users.AnyAsync();
 
-            if (res) return; // if some users are already assigned to the Admin role, we don't need to create a new admin user.
+            if (res || usersExists) return; // if some users are already assigned to the Admin role, we don't need to create a new admin user.
 
             var adminUser = new AppUser
             {
@@ -155,9 +156,11 @@ namespace dotnetMVP.Models
                 Bio = "Admin User for testing.",
                 UserName = "admin",
             };
-            var createdUser = await _userManager.CreateAsync(adminUser, "Admin123!"); 
-            if ( !createdUser.Succeeded) throw new Exception("Failed to create admin user in seed database.");
-
+            var createdUser = await _userManager.CreateAsync(adminUser, "Admin123!");
+            if (!createdUser.Succeeded)
+            {
+                throw new Exception($"Failed to create admin user in seed database.\n{createdUser.Errors.FirstOrDefault()?.Description ?? "Unknown error"}");
+            }
             var admin = await _userManager.AddToRoleAsync(adminUser, nameof(AppPolicies.AdminAccess));
             var moder = await _userManager.AddToRoleAsync(adminUser, nameof(AppPolicies.ModeratorAccess));
 

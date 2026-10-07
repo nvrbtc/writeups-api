@@ -2,8 +2,8 @@
 using dotnetMVP.Models.DTO.PlatformDto;
 using dotnetMVP.Services.Interface;
 using dotnetMVP.Types;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Nerdudes.Models.DTO;
 
 namespace dotnetMVP.Services.Realization
 {
@@ -21,7 +21,7 @@ namespace dotnetMVP.Services.Realization
             _mapper = platformMapper;
             _logger = logger;
         }
-        public async Task<ShowPlatformDto> CreateAsync(CreatePllatformDto dto)
+        public async Task<ShowPlatformDto> CreateAsync(CreatePlatformDto dto)
         {
             var entity = _mapper.MapToEntity(dto);
 
@@ -33,19 +33,23 @@ namespace dotnetMVP.Services.Realization
             return _mapper.MapFromEntity(entity);
         }
 
-        public async Task<ServiceResult<Guid>> DeleteByIdAsync(Guid id)
+        public async Task<ServiceResult<GeneralResponse>> DeleteByIdAsync(Guid platformId, Guid userId)
         {
-            var result = await _dbcontext.Platforms.FindAsync(id);
+            var result = await _dbcontext.Platforms.FindAsync(platformId);
 
-            if (result == null) return ServiceResult<Guid>.Fail("Platform not found.",
+            if (result == null) return ServiceResult<GeneralResponse>.Fail("Platform not found.",
                                                                 OperationResult.ObjectNotFound);
 
             _dbcontext.Platforms.Remove(result);
             await _dbcontext.SaveChangesAsync();
 
-            _logger.LogInformation("Deleted platform with id = {platformId}", id);
+            _logger.LogInformation("Deleted platform with id = {platformId}, user = {userId}", platformId, userId);
 
-            return ServiceResult<Guid>.Ok(id);
+            return ServiceResult<GeneralResponse>.Ok(new()
+            {
+                Message = "Platform deleted successfully.",
+                Reason = "Deletion successful."
+            });
         }
 
         public async Task<IEnumerable<ShowPlatformDto>> GetAllAsync()

@@ -3,7 +3,6 @@ using dotnetMVP.Models.Entities;
 using dotnetMVP.Services.Interface;
 using dotnetMVP.Types;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Nerdudes.Models.DTO;
 using Nerdudes.Models.DTO.User;
 using Serilog.Context;
@@ -41,6 +40,7 @@ namespace dotnetMVP.Services.Realization
         {
             var user = _mapper.MapToEntity(dto);
             var result = await _userManager.CreateAsync(user, dto.Password);
+
             if (result.Succeeded) return ServiceResult<ShowCreatedUserDto>.Ok(_mapper.MapToDto(user));
 
             using (LogContext.PushProperty("User creation", "Failed"))
@@ -52,11 +52,6 @@ namespace dotnetMVP.Services.Realization
                 return ServiceResult<ShowCreatedUserDto>.Fail("Username already exists",
                                                             OperationResult.DuplicateObject);
             return ServiceResult<ShowCreatedUserDto>.Ok(_mapper.MapToDto(user));  // not found temp
-        }
-
-        public async Task<IEnumerable<AppUser>> GetAllUsers()
-        {
-            
         }
     }
 }

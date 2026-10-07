@@ -50,7 +50,7 @@ namespace dotnetMVP.Controllers
         [HttpPut("edit")]
         public async Task<IActionResult> Edit([FromBody] ShowWriteUpDto dto)
         {
-            var result = await _writeUpService.EditAsync(dto, this.GetUserIdFromClaims());
+            var result = await _writeUpService.UpdateAsync(dto, this.GetUserIdFromClaims());
             return this.ResultToHttpCode(result);
         }
 

@@ -1,13 +1,9 @@
 ﻿using dotnetMVP.Models;
-using dotnetMVP.Models.DTO.User;
 using dotnetMVP.Models.DTO.Writeup;
 using dotnetMVP.Services.Interface;
 using dotnetMVP.Types;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Nerdudes.Models.DTO;
-using System.Collections;
 
 namespace dotnetMVP.Services.Realization
 {
@@ -119,7 +115,7 @@ namespace dotnetMVP.Services.Realization
         }
 
         //ToDo: check if user can edit
-        public async Task<ServiceResult<ShowWriteUpDto>> EditAsync(ShowWriteUpDto dto, Guid userId)
+        public async Task<ServiceResult<ShowWriteUpDto>> UpdateAsync(ShowWriteUpDto dto, Guid userId)
         {
             //TODO: check if user can do this action
             var writeUp = await _context.WriteUps.Where(x => x.Id == dto.Id).FirstOrDefaultAsync();

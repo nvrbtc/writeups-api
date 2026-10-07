@@ -26,6 +26,7 @@ namespace dotnetMVP.Controllers
             var result = await _authService.LoginAsync(dto);
             return this.ResultToHttpCode(result);
         }
+
         [AllowAnonymous]
         [HttpPost("refresh")]
         public async Task<IActionResult> RefreshAsync([FromBody] JwtTokens jwtTokens)
