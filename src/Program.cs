@@ -26,9 +26,8 @@ builder.Services.AddOpenTelemetry()
                                                          //.UseOtlpExporter(OpenTelemetry.Exporter.OtlpExportProtocol.HttpProtobuf,)     [ app -> 3rd party collector (loki,prometheus,etc.)]
     .WithTracing(r =>
     {
-        r.AddAspNetCoreInstrumentation(); // использование интструментов SDK(?) под трейсы и спаны ( ниже то же, но с метриками ) 
+        r.AddAspNetCoreInstrumentation(); 
         r.AddHttpClientInstrumentation();
-        //r.AddConsoleExporter();
     })
     .WithMetrics(r =>
     {
@@ -72,6 +71,7 @@ builder.Services.AddAuthentication(options =>
                 .AddJwtBearer(options =>
                 {
                     var jwtOptions = builder.Configuration.GetSection("Jwt").Get<JwtOptions>();
+                    //var jwtOptions = builder.Configuration.GetSection("Jwt").Get<JwtOptions>();
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = jwtOptions.ValidateIssuer,
@@ -82,9 +82,8 @@ builder.Services.AddAuthentication(options =>
                         ValidIssuer = jwtOptions.ValidIssuer,
                         ValidAudience = jwtOptions.ValidAudience,
 
-                        //Change later to more secure approach , like using a key vault or environment variable ( mb docker env variables ) 
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SymmetricKey)),
-                        ValidAlgorithms = jwtOptions.ValidAlgotrithms
+                        ValidAlgorithms = jwtOptions.ValidAlgotrithms,
                     };
                 });
 
@@ -96,8 +95,6 @@ builder.Services.ConfigurePolicies();
 
 
 builder.Services.AddSwaggerGen();
-
-
 
 var app = builder.Build();
 
@@ -111,9 +108,9 @@ using (var serv = app.Services.CreateScope())
     if (app.Environment.IsDevelopment())
     {
         // seed the database with initial data for development environment
-        SeedDatabase seed = new SeedDatabase(db, serv.ServiceProvider.GetRequiredService<UserManager<AppUser>>());
+        //SeedDatabase seed = new SeedDatabase(db, serv.ServiceProvider.GetRequiredService<UserManager<AppUser>>());
 
-        await seed.EnsureRolesAndAdmins();
+        //await seed.EnsureRolesAndAdmins();
     }
 }
 app.UseHsts();

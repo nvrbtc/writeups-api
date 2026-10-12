@@ -8,12 +8,15 @@ namespace dotnetMVP.Models.Entities
         // Primary key
         [Required]
         public Guid Id { get; set; }
+
         // Foreign key to the Challenge class + navigation property
         public Guid ChallengeId { get; set; }
         public Challenge Challenge { get; set; } = null!;
+
         // Foreign key to the AppUser class + navigation property
         public Guid AppUserId { get; set;}
         public AppUser AppUser { get; set; } = null!;
+
         //Entity properties
         [MaxLength(50)]
         public string Title { get; set; } = string.Empty;

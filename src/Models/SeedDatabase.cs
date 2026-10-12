@@ -10,18 +10,19 @@ namespace dotnetMVP.Models
     {
         private readonly ApplicationDBcontext _context;
         private readonly UserManager<AppUser> _userManager;
-        public SeedDatabase(ApplicationDBcontext context, UserManager<AppUser> manager) 
-        { 
+        private AppUser? _adminUser;
+        public SeedDatabase(ApplicationDBcontext context, UserManager<AppUser> manager)
+        {
             _context = context;
             _userManager = manager;
         }
         //
-        public void SeedDatabaseDemo()
+        public async Task SeedDatabaseDemo()
         {
             List<Platform> platforms = new List<Platform>();
             if (!_context.Platforms.Any())
             {
-                 platforms = new List<Platform>()
+                platforms = new List<Platform>()
                 {
                     new Platform()
                     {
@@ -74,9 +75,9 @@ namespace dotnetMVP.Models
                     }
                 };
             }
-            
+
             List<WriteUp> writeUps = new List<WriteUp>();
-            if ( !_context.WriteUps.Any())
+            if (!_context.WriteUps.Any())
             {
                 writeUps = new List<WriteUp>()
                 {
@@ -85,6 +86,8 @@ namespace dotnetMVP.Models
                         Id = Guid.NewGuid(),
                         Challenge = tasks[0],
                         ChallengeId = tasks[0].Id,
+                        AppUserId = _adminUser.Id,
+                        AppUser = _adminUser,
                         Title = "MakeSense WriteUp",
                         Text = "This is a write-up for the MakeSense challenge on Hack The Box.",
                         CreatedAt = DateTime.UtcNow,
@@ -97,6 +100,9 @@ namespace dotnetMVP.Models
                         Id = Guid.NewGuid(),
                         Challenge = tasks[1],
                         ChallengeId = tasks[1].Id,
+
+                        AppUserId = _adminUser.Id,
+                        AppUser = _adminUser,
                         Title = "Blue WriteUp",
                         Text = "This is a write-up for the Blue challenge on THM.",
                         CreatedAt = DateTime.UtcNow,
@@ -109,6 +115,8 @@ namespace dotnetMVP.Models
                         Id = Guid.NewGuid(),
                         Challenge = tasks[2],
                         ChallengeId = tasks[2].Id,
+                        AppUserId = _adminUser.Id,
+                        AppUser = _adminUser,
                         Title = "Crypto 101 WriteUp",
                         Text = "This is a write-up for the Crypto 101 challenge on Cryptohack.",
                         CreatedAt = DateTime.UtcNow,
@@ -119,36 +127,30 @@ namespace dotnetMVP.Models
                 };
 
             }
-            _context.Platforms.AddRange(platforms);
-            _context.WriteUps.AddRange(writeUps);
-            _context.Challenges.AddRange(tasks);
-            _context.SaveChanges();
+            await _context.Platforms.AddRangeAsync(platforms);
+            await _context.WriteUps.AddRangeAsync(writeUps);
+            await _context.Challenges.AddRangeAsync(tasks);
+            await _context.SaveChangesAsync();
         }
         public async Task EnsureRolesAndAdmins()
         {
-            if ( !await _context.Roles.AnyAsync())
+            //Create admin role
+            var adminRes = await _context.Roles.AddAsync(new Microsoft.AspNetCore.Identity.IdentityRole<Guid>
             {
-                await _context.Roles.AddAsync(new Microsoft.AspNetCore.Identity.IdentityRole<Guid>
-                {
-                    Id = Guid.NewGuid(),
-                    Name = nameof(AppPolicies.AdminAccess),
-                    NormalizedName = "ADMIN"
-                });
-                await _context.Roles.AddAsync(new Microsoft.AspNetCore.Identity.IdentityRole<Guid>
-                {
-                    Id = Guid.NewGuid(),
-                    Name = nameof(AppPolicies.ModeratorAccess),
-                    NormalizedName = "MODER"
-                });
-            }
+                Id = Guid.NewGuid(),
+                Name = nameof(AppPolicies.AdminAccess),
+                NormalizedName = nameof(AppPolicies.AdminAccess).ToUpper()
+            });
+            //Create moderator role
+            var moderRes = await _context.Roles.AddAsync(new Microsoft.AspNetCore.Identity.IdentityRole<Guid>
+            {
+                Id = Guid.NewGuid(),
+                Name = nameof(AppPolicies.ModeratorAccess),
+                NormalizedName = nameof(AppPolicies.ModeratorAccess).ToUpper()
+            });
 
+            //await _context.SaveChangesAsync(); [not necessary]
 
-
-            var id = await _context.Roles.Where(x => x.Name == nameof(AppPolicies.AdminAccess)).Select(x => x.Id).FirstOrDefaultAsync();
-            var res = await _context.UserRoles.Where(x=> x.RoleId == id).Select(x => x.UserId).AnyAsync();
-            var usersExists = await _context.Users.AnyAsync();
-
-            if (res || usersExists) return; // if some users are already assigned to the Admin role, we don't need to create a new admin user.
 
             var adminUser = new AppUser
             {
@@ -156,16 +158,18 @@ namespace dotnetMVP.Models
                 Bio = "Admin User for testing.",
                 UserName = "admin",
             };
+            this._adminUser = adminUser;
             var createdUser = await _userManager.CreateAsync(adminUser, "Admin123!");
             if (!createdUser.Succeeded)
             {
                 throw new Exception($"Failed to create admin user in seed database.\n{createdUser.Errors.FirstOrDefault()?.Description ?? "Unknown error"}");
             }
             var admin = await _userManager.AddToRoleAsync(adminUser, nameof(AppPolicies.AdminAccess));
-            var moder = await _userManager.AddToRoleAsync(adminUser, nameof(AppPolicies.ModeratorAccess));
+            if (admin.Errors.Any())
+            {
+                throw new Exception($"Failed to add admin user to role in seed database.\n{admin.Errors.FirstOrDefault()?.Description ?? "Unknown error"}");
 
-            if ( !admin.Succeeded || !moder.Succeeded ) throw new Exception ("Roles initialization failed.");
-            
-        }    
+            }
+        }
     }
 }

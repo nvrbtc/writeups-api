@@ -1,3 +1,4 @@
 <Solution>
-  <Project Path="Nerdudes.csproj" />
+  <Project Path="./tests/NTest.csproj" />
+  <Project Path="./src/Nerdudes.csproj" />
 </Solution>

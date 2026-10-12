@@ -54,9 +54,9 @@ namespace dotnetMVP.Controllers
 
         //TODO: [Authorize(Roles = "Admin, Moderator")] - add roles when they will be introduced
         [HttpDelete("delete")]
-        public async Task<ActionResult> DeleteAsync(Guid id)
+        public async Task<IActionResult> DeleteAsync(Guid id)
         {
-            var result = await _platformService.DeleteByIdAsync(id);
+            var result = await _platformService.DeleteByIdAsync(id, this.GetUserIdFromClaims());
 
             return this.ResultToHttpCode(result);
         }

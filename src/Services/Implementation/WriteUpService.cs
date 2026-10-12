@@ -37,13 +37,13 @@ namespace dotnetMVP.Services.Realization
         public async Task<IEnumerable<ShowWriteUpDto>> FilterByPlatformIdAsync(Guid platformId)
         {
             var result = await _context.WriteUps.AsNoTracking().Where(x => x.Challenge.PlatformId == platformId && !x.IsHidden && !x.IsHiddenByAdmin).
-                                                                    Select(x => new ShowWriteUpDto()
-                                                                    {
-                                                                        Id = x.Id,
-                                                                        Challenge = x.Challenge.Name,
-                                                                        Title = x.Title,
-                                                                        Text = x.Text
-                                                                    }).ToListAsync();
+                                                                Select(x => new ShowWriteUpDto()
+                                                                {
+                                                                    Id = x.Id,
+                                                                    Challenge = x.Challenge.Name,
+                                                                    Title = x.Title,
+                                                                    Text = x.Text
+                                                                }).ToListAsync();
             return result;
         }
 
@@ -56,6 +56,7 @@ namespace dotnetMVP.Services.Realization
                 Title = x.Title,
                 Text = x.Text
             }).ToListAsync();
+
             return result;
         }
 
@@ -75,10 +76,9 @@ namespace dotnetMVP.Services.Realization
         }
 
 
-        //rely on JWT to identify user, can be exploitable
         public async Task<ServiceResult<IEnumerable<ShowWriteUpDto>>> GetAllByUserIdAsync(Guid userId)
         {
-            //TODO when users introduced
+            
             var userExist = await _context.AppUser.AsNoTracking().AnyAsync(x => x.Id == userId);
             if (!userExist) return ServiceResult<IEnumerable<ShowWriteUpDto>>.Fail("User not found.", OperationResult.ObjectNotFound);
 

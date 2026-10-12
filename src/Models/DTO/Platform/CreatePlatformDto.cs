@@ -2,7 +2,7 @@
 
 namespace dotnetMVP.Models.DTO.PlatformDto
 {
-    public record CreatePllatformDto
+    public record CreatePlatformDto
     {
         
         [Required(ErrorMessage = "Name is required.")]

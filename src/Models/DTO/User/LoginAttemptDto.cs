@@ -2,7 +2,7 @@
 
 namespace dotnetMVP.Models.DTO.User
 {
-    public record LoginAttempDto
+    public record LoginAttemptDto
     {
         [Required(ErrorMessage ="Username is required.")]
         public string Username { get; init; } = string.Empty;

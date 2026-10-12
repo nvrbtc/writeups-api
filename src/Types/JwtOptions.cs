@@ -11,6 +11,9 @@
         public bool ValidateAudience { get; set; }
         public bool ValidateKey { get; set; }
 
+        public int AccessMinutsToLive { get; set; }
+        public int RefreshMinutsToLive { get; set; }
+
         public List<string> ValidAlgotrithms { get; set; } = new();//Get actual name from SecureAlgorithm
     }
 }

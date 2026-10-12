@@ -38,7 +38,7 @@ namespace dotnetMVP.Services.Realization
             var tokenD = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(15),
+                Expires = DateTime.UtcNow.AddMinutes(_jwtOptions.AccessMinutsToLive), // Add time to options
                 Issuer = _jwtOptions.ValidIssuer,
                 Audience = _jwtOptions.ValidAudience,
                 SigningCredentials = signing

@@ -5,6 +5,7 @@ using dotnetMVP.Services.Interface;
 using dotnetMVP.Types;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -15,21 +16,23 @@ namespace dotnetMVP.Services.Realization
     public class AuthService : IAuthService
     {
         private readonly ApplicationDBcontext _context;
-        private readonly IJwtHandler _jwt;
+        private readonly IJwtHandler _jwtHandler;
         private readonly UserManager<AppUser> _usrMng;
         private readonly ILogger<AuthService> _logger;
-
-        public AuthService(ApplicationDBcontext db,
-                            IJwtHandler jwt,
-                            UserManager<AppUser> mng,
-                            ILogger<AuthService> logger)
+        private readonly JwtOptions _optionsJwt;
+        public AuthService(ApplicationDBcontext dbContext,
+                            IJwtHandler jwtHandler,
+                            UserManager<AppUser> usrMng,
+                            ILogger<AuthService> logger,
+                            IOptions<JwtOptions> optionsJwt)
         {
-            _context = db;
-            _jwt = jwt;
-            _usrMng = mng;
+            _context = dbContext;
+            _jwtHandler = jwtHandler;
+            _usrMng = usrMng;
             _logger = logger;
+            _optionsJwt = optionsJwt.Value;
         }
-        public async Task<ServiceResult<JwtTokens>> LoginAsync(LoginAttempDto loginAttempDto)
+        public async Task<ServiceResult<JwtTokens>> LoginAsync(LoginAttemptDto loginAttempDto)
         {
             var user = await _context.AppUser.Where(x => x.UserName == loginAttempDto.Username).SingleOrDefaultAsync();
 
@@ -45,13 +48,13 @@ namespace dotnetMVP.Services.Realization
             }
 
             var roles = await _usrMng.GetRolesAsync(user);
-            var accessToken = _jwt.GenerateJwtToken(new UserClaims
+            var accessToken = _jwtHandler.GenerateJwtToken(new UserClaims
             {
                 Id = user.Id,
                 Claims = roles
             });
 
-            var refreshToken = _jwt.GenerateRefreshToken();
+            var refreshToken = _jwtHandler.GenerateRefreshToken();
             string hashedRefreshToken = HashToHexLowerString(refreshToken);
             // Store the hashed refresh token in the database
             
@@ -59,7 +62,7 @@ namespace dotnetMVP.Services.Realization
             {
                 RefreshTokenId = Guid.NewGuid(),
                 RefreshSecret = hashedRefreshToken, // store the hashed refresh token
-                Expires = DateTime.UtcNow.AddDays(10),
+                Expires = DateTime.UtcNow.AddMinutes(_optionsJwt.RefreshMinutsToLive),
                 UserId = user.Id
             });
 
@@ -79,7 +82,7 @@ namespace dotnetMVP.Services.Realization
             ClaimsPrincipal principal;
             try
             {
-                principal = _jwt.GetPrincipalFromExpiredToken(tokens.AccessToken);
+                principal = _jwtHandler.GetPrincipalFromExpiredToken(tokens.AccessToken);
             }
             catch(SecurityTokenException ex)
             {
@@ -109,10 +112,10 @@ namespace dotnetMVP.Services.Realization
                                                      OperationResult.FailedAuth);
             }
 
-            var newRefreshSecret = _jwt.GenerateRefreshToken();
+            var newRefreshSecret = _jwtHandler.GenerateRefreshToken();
             var roles = await _usrMng.GetRolesAsync(user);
 
-            var accessToken = _jwt.GenerateJwtToken(new()
+            var accessToken = _jwtHandler.GenerateJwtToken(new()
             {
                 Id = userId,
                 Claims = roles

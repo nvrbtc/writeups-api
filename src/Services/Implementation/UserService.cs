@@ -51,7 +51,7 @@ namespace dotnetMVP.Services.Realization
             if (result.Errors.Any(x => x.Code == "DuplicateUserName"))
                 return ServiceResult<ShowCreatedUserDto>.Fail("Username already exists",
                                                             OperationResult.DuplicateObject);
-            return ServiceResult<ShowCreatedUserDto>.Ok(_mapper.MapToDto(user));  // not found temp
+            return ServiceResult<ShowCreatedUserDto>.Fail(result.Errors.FirstOrDefault()?.Description ?? "Failed to create user", OperationResult.CreationFailed);
         }
     }
 }

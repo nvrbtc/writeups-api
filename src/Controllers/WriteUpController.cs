@@ -8,7 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 namespace dotnetMVP.Controllers
 {
     [ApiController]
-    [Authorize]
+    //[Authorize]
     [Route("api/writeups")]
     public class WriteUpController : ControllerBase
     {
@@ -65,7 +65,7 @@ namespace dotnetMVP.Controllers
             return this.ResultToHttpCode(result);
         }
 
-
+        // GET: api/writeups/id/{id}
         [HttpGet("id/{id:guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {
