@@ -8,8 +8,8 @@ namespace dotnetMVP.Models.DTO.Writeup
         {
             return new ShowWriteUpDto()
             {
-                Challenge = entity.Challenge.Name,
-                Title = entity.Title,
+                ChallengeName = entity.Challenge.Name,
+                Title = entity.Name,
                 Text = entity.Text,
                 Id = entity.Id,
             };
@@ -21,7 +21,7 @@ namespace dotnetMVP.Models.DTO.Writeup
                 Id = Guid.NewGuid(),
                 //AppUserId = dto.AppUserId,
                 ChallengeId = dto.ChallengeId,
-                Title = dto.Title,
+                Name = dto.Title,
                 Text = dto.Text,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
@@ -37,7 +37,7 @@ namespace dotnetMVP.Models.DTO.Writeup
                 Id = Guid.NewGuid(),
                 ChallengeId = dto.ChallengeId,
                 AppUserId = ownerId,
-                Title = dto.Title,
+                Name = dto.Title,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
                 IsHidden = false,
@@ -48,7 +48,7 @@ namespace dotnetMVP.Models.DTO.Writeup
         public void MapToEntity(ShowWriteUpDto dto, WriteUp oldVersion)
         { 
             //apply updates
-            oldVersion.Title = dto.Title;
+            oldVersion.Name = dto.Title;
             oldVersion.Text = dto.Text;
             oldVersion.UpdatedAt = DateTime.UtcNow;
         }

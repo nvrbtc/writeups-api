@@ -11,6 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="src\**" />
+    <Content Remove="src\**" />
+    <EmbeddedResource Remove="src\**" />
+    <None Remove="src\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10" />
@@ -31,14 +38,13 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
 	  
 	  <!-- Make internal Program.cs visible to test project to configure test services-->
-	  <InternalsVisibleTo Include="src/NTest" />
+	  <InternalsVisibleTo Include="../tests/NTest.csproj" />
   
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="img\" />
-    <Folder Include="src\" />
   </ItemGroup>
 
 

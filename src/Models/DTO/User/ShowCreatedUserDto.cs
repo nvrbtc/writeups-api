@@ -7,6 +7,5 @@ namespace dotnetMVP.Models.DTO.User
         [Required(ErrorMessage = "Id is required.")]
         public Guid Id { get; init; }
         public string Username { get; init; } = string.Empty;
-        public string Password { get; init; } = string.Empty; // for testing purposes 
     }
 }

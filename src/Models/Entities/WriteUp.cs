@@ -19,7 +19,7 @@ namespace dotnetMVP.Models.Entities
 
         //Entity properties
         [MaxLength(50)]
-        public string Title { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
         [MaxLength(2000)]
         public string Text { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty; //Maybe there is a better way to store hash of passwd 

@@ -9,18 +9,18 @@ namespace dotnetMVP.Models.DTO.ChallengeDto
             return new Challenge
             {
                 Id = Guid.NewGuid(),
-                Name = dto.Title,
-                Description = dto.Description,
-                Title = dto.Title,
+                Name = dto.Name,
+                Text = dto.Text,
+                ShortDescription = dto.ShortDescription,
                 PlatformId = dto.PlatformId
             };
         }
 
         public Challenge MapToEntity(ShowChallengeInfoDto dto, Challenge existingEntity)
         { 
-            existingEntity.Name = dto.ChallengeName;
-            existingEntity.Description = dto.Description;
-            existingEntity.Title = dto.Title;
+            existingEntity.Name = dto.Name;
+            existingEntity.Text = dto.Text;
+            existingEntity.ShortDescription = dto.ShortDescription;
 
             return existingEntity;
         }
@@ -29,11 +29,11 @@ namespace dotnetMVP.Models.DTO.ChallengeDto
             return new()
             {
                 ChallengeId = entity.Id,
-                ChallengeName = entity.Name,
-                Description = entity.Description,
+                Name = entity.Name,
+                Text = entity.Text,
                 PlatformId = entity.PlatformId,
                 PlatformName = entity.Platform?.Name ?? "Placeholder",
-                Title = entity.Title
+                ShortDescription = entity.ShortDescription
             };
         }
     }

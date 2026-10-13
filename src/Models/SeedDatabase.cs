@@ -56,21 +56,21 @@ namespace dotnetMVP.Models
                     {
                         Id = Guid.NewGuid(),
                         Name = "MakeSense",
-                        Description = "MakeSense is a challenge on Hack The Box that requires you to find the flag hidden in a web application.",
+                        Text = "MakeSense is a challenge on Hack The Box that requires you to find the flag hidden in a web application.",
                         Platform = platforms[0]
                     },
                     new Challenge()
                     {
                         Id = Guid.NewGuid(),
                         Name = "Blue",
-                        Description = "Blue is a challenge on THM that requires you to find the flag hidden in a web application.",
+                        Text = "Blue is a challenge on THM that requires you to find the flag hidden in a web application.",
                         Platform = platforms[1]
                     },
                     new Challenge()
                     {
                         Id = Guid.NewGuid(),
                         Name = "Crypto 101",
-                        Description = "Crypto 101 is a challenge on Cryptohack that requires you to find the flag hidden in a web application.",
+                        Text = "Crypto 101 is a challenge on Cryptohack that requires you to find the flag hidden in a web application.",
                         Platform = platforms[2]
                     }
                 };
@@ -88,7 +88,7 @@ namespace dotnetMVP.Models
                         ChallengeId = tasks[0].Id,
                         AppUserId = _adminUser.Id,
                         AppUser = _adminUser,
-                        Title = "MakeSense WriteUp",
+                        Name = "MakeSense WriteUp",
                         Text = "This is a write-up for the MakeSense challenge on Hack The Box.",
                         CreatedAt = DateTime.UtcNow,
                         UpdatedAt = DateTime.UtcNow,
@@ -103,7 +103,7 @@ namespace dotnetMVP.Models
 
                         AppUserId = _adminUser.Id,
                         AppUser = _adminUser,
-                        Title = "Blue WriteUp",
+                        Name = "Blue WriteUp",
                         Text = "This is a write-up for the Blue challenge on THM.",
                         CreatedAt = DateTime.UtcNow,
                         UpdatedAt = DateTime.UtcNow,
@@ -117,7 +117,7 @@ namespace dotnetMVP.Models
                         ChallengeId = tasks[2].Id,
                         AppUserId = _adminUser.Id,
                         AppUser = _adminUser,
-                        Title = "Crypto 101 WriteUp",
+                        Name = "Crypto 101 WriteUp",
                         Text = "This is a write-up for the Crypto 101 challenge on Cryptohack.",
                         CreatedAt = DateTime.UtcNow,
                         UpdatedAt = DateTime.UtcNow,
@@ -134,6 +134,9 @@ namespace dotnetMVP.Models
         }
         public async Task EnsureRolesAndAdmins()
         {
+            // remove all active users and their data [on_cascade]
+            var users = await _context.AppUser.Where(x => x.Id != default).ToListAsync();
+            _context.RemoveRange(users);
             //Create admin role
             var adminRes = await _context.Roles.AddAsync(new Microsoft.AspNetCore.Identity.IdentityRole<Guid>
             {

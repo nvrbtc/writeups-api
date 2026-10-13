@@ -7,7 +7,7 @@ namespace dotnetMVP.Models.DTO.Writeup
         [Required]
         public Guid Id { get; init; }
         [MaxLength(50)]
-        public string Challenge { get; init; } = string.Empty; // From options in web
+        public string ChallengeName { get; init; } = string.Empty; // From options in web
         [MaxLength(50,ErrorMessage = "Max length is 50.")]
         public string Title { get; init; } = string.Empty;
         [MaxLength(2000,ErrorMessage = "Max length is 2000.")]

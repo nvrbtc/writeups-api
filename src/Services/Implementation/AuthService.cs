@@ -123,7 +123,7 @@ namespace dotnetMVP.Services.Realization
 
             
             currentRefresh.RefreshSecret = HashToHexLowerString(newRefreshSecret);
-            currentRefresh.Expires = DateTime.UtcNow.AddDays(10);
+            currentRefresh.Expires = DateTime.UtcNow.AddMinutes(_optionsJwt.RefreshMinutsToLive);
 
             await _context.SaveChangesAsync();
 

@@ -39,12 +39,12 @@ namespace dotnetMVP.Services.Realization
             var result = await _context.Challenges.AsNoTracking()
                                                     .Select(x => new ShowChallengeInfoDto()
                                                     {
-                                                        Description = x.Description,
+                                                        Text = x.Text,
                                                         ChallengeId = x.Id,
-                                                        ChallengeName = x.Name,
+                                                        Name = x.Name,
                                                         PlatformId = x.Platform.Id,
                                                         PlatformName = x.Platform.Name,
-                                                        Title = x.Title
+                                                        ShortDescription = x.ShortDescription
                                                     }).ToListAsync();
 
             return result;
@@ -57,9 +57,9 @@ namespace dotnetMVP.Services.Realization
                                                     .Select(x => new ShowChallengeInfoDto
                                                     {
                                                         ChallengeId = x.Id,
-                                                        ChallengeName = x.Name,
-                                                        Description = x.Description,
-                                                        Title = x.Title,
+                                                        Name = x.Name,
+                                                        Text = x.Text,
+                                                        ShortDescription = x.ShortDescription,
                                                         PlatformId = x.Platform.Id,
                                                         PlatformName = x.Platform.Name
                                                     }).FirstOrDefaultAsync();
@@ -75,9 +75,9 @@ namespace dotnetMVP.Services.Realization
                                                     .Select(x => new ShowChallengeInfoDto
                                                     {
                                                         ChallengeId = x.Id,
-                                                        ChallengeName = x.Name,
-                                                        Description = x.Description,
-                                                        Title = x.Title,
+                                                        Name = x.Name,
+                                                        Text = x.Text,
+                                                        ShortDescription = x.ShortDescription,
                                                         PlatformId = x.Platform.Id,
                                                         PlatformName = x.Platform.Name
                                                     }).ToListAsync();

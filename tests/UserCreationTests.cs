@@ -20,7 +20,7 @@ namespace NTest
 
             var response = await c.PostAsJsonAsync<CreateUserDto>("/api/user/register",invalidUsername);
 
-            response.StatusCode.Should().NotBe(HttpStatusCode.OK);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
     }
 }

@@ -10,7 +10,6 @@ namespace dotnetMVP.Models.DTO.User
             {
                 Id = Guid.NewGuid(),
                 UserName = dto.Username,
-                
             };
         }
 

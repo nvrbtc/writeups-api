@@ -27,8 +27,8 @@ namespace dotnetMVP.Services.Realization
                                                                     .Select(x => new ShowWriteUpDto
                                                                     {
                                                                         Id = x.Id,
-                                                                        Challenge = x.Challenge.Name,
-                                                                        Title = x.Title,
+                                                                        ChallengeName = x.Challenge.Name,
+                                                                        Title = x.Name,
                                                                         Text = x.Text
                                                                     }).ToListAsync();
             return result;
@@ -40,8 +40,8 @@ namespace dotnetMVP.Services.Realization
                                                                 Select(x => new ShowWriteUpDto()
                                                                 {
                                                                     Id = x.Id,
-                                                                    Challenge = x.Challenge.Name,
-                                                                    Title = x.Title,
+                                                                    ChallengeName = x.Challenge.Name,
+                                                                    Title = x.Name,
                                                                     Text = x.Text
                                                                 }).ToListAsync();
             return result;
@@ -52,8 +52,8 @@ namespace dotnetMVP.Services.Realization
             var result = await _context.WriteUps.AsNoTracking().Where(x => !x.IsHidden && !x.IsHiddenByAdmin).Select(x => new ShowWriteUpDto
             {
                 Id = x.Id,
-                Challenge = x.Challenge.Name,
-                Title = x.Title,
+                ChallengeName = x.Challenge.Name,
+                Title = x.Name,
                 Text = x.Text
             }).ToListAsync();
 
@@ -65,8 +65,8 @@ namespace dotnetMVP.Services.Realization
             var result = await _context.WriteUps.AsNoTracking().Where(x => x.Id == id && !x.IsHidden && !x.IsHiddenByAdmin)
                                                                 .Select(x => new ShowWriteUpDto()
                                                                 {
-                                                                    Challenge = x.Challenge.Name,
-                                                                    Title = x.Title,
+                                                                    ChallengeName = x.Challenge.Name,
+                                                                    Title = x.Name,
                                                                     Id = x.Id,
                                                                     Text = x.Text
                                                                 }).FirstOrDefaultAsync();
@@ -88,10 +88,10 @@ namespace dotnetMVP.Services.Realization
                                                             && !x.IsHiddenByAdmin)
                                                 .Select(x => new ShowWriteUpDto()
                                                 {
-                                                    Challenge = x.Challenge.Name,
+                                                    ChallengeName = x.Challenge.Name,
                                                     Id = x.Id,
                                                     Text = x.Text,
-                                                    Title = x.Title
+                                                    Title = x.Name
                                                 }).ToListAsync();
 
             return ServiceResult<IEnumerable<ShowWriteUpDto>>.Ok(result);

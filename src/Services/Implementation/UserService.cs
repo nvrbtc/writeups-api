@@ -26,10 +26,10 @@ namespace dotnetMVP.Services.Realization
 
         public async Task<ServiceResult<GeneralResponse>> ChangePasswordAsync(ChangePasswordDto dto, Guid userId)
         {
-            // no need to compare new password and confirm password, because it is already validated in the controller
             var user = _userManager.Users.FirstOrDefault(x => x.Id == userId);
-            var result = await _userManager.ChangePasswordAsync(user, dto.OldPassword, dto.NewPassword);
+            if (user == null) return ServiceResult<GeneralResponse>.Fail("User not found", OperationResult.ObjectNotFound);
 
+            var result = await _userManager.ChangePasswordAsync(user, dto.OldPassword, dto.NewPassword);
             if (result.Succeeded) return ServiceResult<GeneralResponse>.Ok(new GeneralResponse { Message = "Password changed successfully" });
 
             return ServiceResult<GeneralResponse>.Fail(result.Errors.FirstOrDefault()?.Description ?? "Failed to change password", 
@@ -51,7 +51,8 @@ namespace dotnetMVP.Services.Realization
             if (result.Errors.Any(x => x.Code == "DuplicateUserName"))
                 return ServiceResult<ShowCreatedUserDto>.Fail("Username already exists",
                                                             OperationResult.DuplicateObject);
-            return ServiceResult<ShowCreatedUserDto>.Fail(result.Errors.FirstOrDefault()?.Description ?? "Failed to create user", OperationResult.CreationFailed);
+            return ServiceResult<ShowCreatedUserDto>.Fail(result.Errors.FirstOrDefault()?.Description ?? "Failed to create user", 
+                                                                                                        OperationResult.CreationFailed);
         }
     }
 }
